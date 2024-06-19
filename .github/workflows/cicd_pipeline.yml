@@ -1,23 +1,49 @@
 name: cicd pipeline
 on:
   pull_request:
-    branchesL:
+    # workflow triggers when pull_requests are made to all branches
+    branches:
+      - '*'
+
+  push:
+    branches:
       - main
 
 jobs:
-  job_1:
+  run-checkout:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "send hello greetings"
-        run: echo "hello team." 
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          # fetch minimal history
+          fetch-depth: 1
 
-  job_2:
-    needs: job_1
+      - name: setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+      - name: install dependencies
+        run: npm install
+
+      - name: run tests
+        run: npm test
+
+  run-changelog:
     runs-on: ubuntu-latest
 
     steps:
-      - name: "show current directory"
+      - name: checkout checkout repository
+        uses: actions/checkout@v4
+        with:
+          # fetch full history for changelog generation
+          fetch-depth: 0
+        
+      - name: generate changelog
         run: |
-          pwd
-          echo "this is the current path"
+          git log --pretty=format:"%h - %an, %ar : %s"
