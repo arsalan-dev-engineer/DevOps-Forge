@@ -1,0 +1,11 @@
+{
+  "name": "devops-forge",
+  "version": "1.0.0",
+  "description": "Welcome to the DevOps Projects Repository! We are a team of associate DevOps engineers dedicated to exploring and implementing various cloud-native solutions and technologies. This repository hosts our projects focused on enhancing infrastructure scalability, automation, and modernization efforts. Below is an overview of our current projects:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
