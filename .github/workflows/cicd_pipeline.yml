@@ -26,17 +26,16 @@ jobs:
       - name: setup node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '14'
+          node-version: '14.x'
           cache: 'npm'
-
-      - run: npm ci
-      - run: npm test
 
       - name: install dependencies
         run: npm install
+        working-directory: ./DevOps-Forge
 
       - name: run tests
         run: npm test
+        working-directory: ./DevOps-Forge
 
   run-changelog:
     runs-on: ubuntu-latest
@@ -47,7 +46,9 @@ jobs:
         with:
           # fetch full history for changelog
           fetch-depth: 0
+          path: ./DevOps-Forge
         
       - name: generate changelog
         run: |
           git log --pretty=format:"%h - %an, %ar : %s"
+        working-directory: ./DevOps-Forge
