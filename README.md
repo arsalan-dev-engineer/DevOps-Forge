@@ -6,23 +6,33 @@ Welcome to the DevOps Projects Repository! We are a team of associate DevOps eng
 
 ## Projects Overview
 ### 1. High Availability WordPress on AWS
-#### /project-1
+```
+#### cd project-1
+```
 Deploying WordPress with high availability on AWS to ensure robust performance and reliability using best practices in AWS infrastructure and services.
 
 ### 2. Containers & AWS Elastic Container Service (ECS)
-#### /project-2
+```
+#### cd project-2
+```
 Exploring containerization with Docker and managing containers at scale using AWS ECS, optimizing for flexibility, scalability, and ease of deployment.
 
 ### 3. RHEL Server in AWS
-#### /project-3
+```
+#### cd project-3
+```
 Setting up and managing Red Hat Enterprise Linux (RHEL) servers on AWS, emphasizing security, performance tuning, and integration with AWS services.
 
 ### 4. Serverless Technologies in a Modernization/Migration Scenario
-#### /project-4
+```
+#### cd project-4
+```
 Implementing serverless architectures for modernizing existing applications or migrating workloads to leverage AWS Lambda and other serverless services for cost-efficiency and scalability.
 
 ### 5. Data Engineering
-#### /project-5
+```
+#### cd project-5
+```
 Building robust data pipelines and infrastructure on AWS, focusing on data ingestion, processing, storage, and analytics to support data-driven decision-making and business insights.
 
 -----
