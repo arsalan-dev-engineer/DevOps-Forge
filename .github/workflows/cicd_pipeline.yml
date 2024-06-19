@@ -1,12 +1,13 @@
 name: cicd pipeline
 on:
   pull_request:
-    # workflow triggers when pull_requests are made to all branches
+    # trigger when pull_requests are made to all branches
     branches:
       - '*'
 
   push:
     branches:
+      # trigger on pushes to the main branch
       - main
 
 jobs:
@@ -19,12 +20,15 @@ jobs:
         with:
           # fetch minimal history
           fetch-depth: 1
+          # check path
+          path: ./DevOps-Forge
 
       - name: setup node.js
         uses: actions/setup-node@v4
         with:
           node-version: '14'
           cache: 'npm'
+
       - run: npm ci
       - run: npm test
 
