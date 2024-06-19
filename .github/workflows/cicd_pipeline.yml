@@ -45,7 +45,7 @@ jobs:
       - name: checkout checkout repository
         uses: actions/checkout@v4
         with:
-          # fetch full history for changelog generation
+          # fetch full history for changelog
           fetch-depth: 0
         
       - name: generate changelog
