@@ -1,5 +1,8 @@
-print("Hello world")
 
-num1 = 10
-num2 = 20
-print(num1+num2)
+def greetings():
+    print("Hello team")
+    for n in range(0, 10+1, 2):
+        print(n)
+
+
+greetings()
