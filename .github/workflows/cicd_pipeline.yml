@@ -1,23 +1,107 @@
-name: cicd pipeline
+name: test temp.py
+
 on:
+  push:
+    branches:
+      - ej_forge
   pull_request:
-    branchesL:
-      - main
+    branches:
+      - ej_forge
 
 jobs:
-  job_1:
+  checkout-code:
     runs-on: ubuntu-latest
-
     steps:
-      - name: "send hello greetings"
-        run: echo "hello team." 
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  job_2:
-    needs: job_1
+  security-scanning:
     runs-on: ubuntu-latest
-
+    needs: checkout-code
     steps:
-      - name: "show current directory"
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install TruffleHog
+        run: pip install truffleHog
+      - name: Run TruffleHog
+        run: trufflehog --json https://github.com/Azzy001/DevOps-Forge.git
+      - name: Security Scanning with Snyk
         run: |
-          pwd
-          echo "this is the current path"
+          npm install -g snyk
+          snyk test
+
+  linting-and-formatting:
+    runs-on: ubuntu-latest
+    needs: security-scanning
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Linting and Formatting
+        run: |
+          npm install
+          npm run lint
+
+  static-code-analysis:
+    runs-on: ubuntu-latest
+    needs: linting-and-formatting
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Static Code Analysis
+        run: |
+          npm install
+          npm run analyze
+
+  dependency-checks:
+    runs-on: ubuntu-latest
+    needs: static-code-analysis
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Dependency Checks
+        run: |
+          npm install
+          npm audit
+
+  build:
+    runs-on: ubuntu-latest
+    needs: dependency-checks
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build
+        run: |
+          npm install
+          npm run build
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Unit Tests
+        run: |
+          npm install
+          npm run test:unit
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Integration Tests
+        run: |
+          npm install
+          npm run test:integration
+
+  run-python-script:
+    runs-on: ubuntu-latest
+    needs: integration-tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run Python Script
+        run: python temp.py  
+
