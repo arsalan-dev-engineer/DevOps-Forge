@@ -61,24 +61,22 @@ jobs:
 
   # job 3 ---------------
   trufflehog-scan:
-    needs: run-changelog
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: run trufflehog
-        uses: docker://trufflesecurity/trufflehog:latest
-        with:
-          args: github --repo=https://github.com/trufflesecurity/test_keys --issue-comments --pr-comments
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: secrets scanning
-        uses: trufflesecuritytrufflehog@main
-        with:
-          extra_args: --only-verified
-
+      needs: run-changelog
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+  
+        - name: Run TruffleHog
+          run: |
+            docker run -e GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} trufflesecurity/trufflehog:latest github --repo=https://github.com/trufflesecurity/test_keys --issue-comments --pr-comments
+  
+        - name: Secrets scanning
+          uses: trufflesecurity/trufflehog-actions@main
+          with:
+            extra_args: --only-verified
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
