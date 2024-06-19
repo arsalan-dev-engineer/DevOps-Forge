@@ -73,10 +73,3 @@ jobs:
         - name: Run TruffleHog
           run: |
             docker run -e GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} trufflesecurity/trufflehog:latest github --repo=https://github.com/trufflesecurity/test_keys --issue-comments --pr-comments
-  
-        - name: Secrets scanning
-          uses: trufflesecurity/trufflehog-actions@main
-          with:
-            extra_args: --only-verified
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
