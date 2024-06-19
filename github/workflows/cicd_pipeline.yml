@@ -1,0 +1,23 @@
+name: cicd pipeline
+on:
+  pull_request:
+    branchesL:
+      - main
+
+jobs:
+  job_1:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "send hello greetings"
+        run: echo "hello team." 
+
+  job_2:
+    needs: job_1
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "show current directory"
+        run: |
+          pwd
+          echo "this is the current path"
