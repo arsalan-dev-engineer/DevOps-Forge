@@ -1,16 +1,25 @@
+# Define the name of the CI/CD pipeline
 name: cicd pipeline
+
+# Specify the events that trigger this pipeline
 on:
   pull_request:
-    # trigger when pull_requests are made to all branches
+    # Trigger when pull requests are made to all branches
     branches:
-      - '*'
+      # all branches
+      - '*'  
 
   push:
     branches:
-      # trigger on pushes to the main branch
-      - main
+      # Trigger on pushes to the main branch
+      - main 
 
+# jobs to be executed
 jobs:
+
+  # job 1 ---------------
+
+  # Job to checkout the repository and install dependencies
   run-checkout:
     runs-on: ubuntu-latest
 
@@ -18,29 +27,58 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v4
         with:
-          # fetch minimal history
+          # Fetch minimal history to speed up checkout
           fetch-depth: 1
-
 
       - name: setup node.js
         uses: actions/setup-node@v4
         with:
           node-version: '14.x'
-          cache: 'npm'
+          # Cache npm dependencies for faster builds
+          cache: 'npm'  
 
       - name: install dependencies
-        run: npm install
-        
+        # Install npm dependencies for the project
+        run: npm install  
+
+  # job 2 ---------------
+
+  # Job to generate changelog based on commit history
   run-changelog:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout checkout repository
+      - name: checkout repository
         uses: actions/checkout@v4
         with:
-          # fetch full history for changelog
+          # Fetch full commit history to generate accurate changelog
           fetch-depth: 0
-        
+
       - name: generate changelog
         run: |
           git log --pretty=format:"%h - %an, %ar : %s"
+          # Command to generate a changelog using Git log format
+
+  # job 3 ---------------
+  trufflehog-scan:
+    needs: run-changelog
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: run trufflehog
+        uses: docker://trufflesecurity/trufflehog:latest
+        with:
+          args: github --repo=https://github.com/trufflesecurity/test_keys --issue-comments --pr-comments
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: secrets scanning
+        uses: trufflesecuritytrufflehog@main
+        with:
+          extra_args: --only-verified
+
