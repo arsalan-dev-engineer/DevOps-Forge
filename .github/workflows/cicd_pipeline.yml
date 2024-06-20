@@ -1,18 +1,18 @@
 # Define the name of the CI/CD pipeline
 name: cicd pipeline
 
-# Specify the events that trigger this pipeline
+# events that trigger this pipeline
 on:
   pull_request:
-    # Trigger when pull requests are made to all branches
     branches:
       # all branches
       - '*'  
 
   push:
     branches:
-      # Trigger on pushes to the main branch
       - main 
+
+# job 1 ------------------------------
 
 jobs:
   run-checkout:
@@ -36,7 +36,7 @@ jobs:
         # Install npm dependencies for the project
         run: npm install  
 
-  # job 2 ---------------
+  # job 2 ------------------------------
 
   # run security checks
   security-check-stage:
@@ -58,9 +58,9 @@ jobs:
       - name: trufflehog scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with: 
-            args: --debug ${{ github.event.repository.default_branch }} HEAD
+            args: --debug --no-verification ${{ github.event.repository.default_branch }} HEAD
         
-  # job 3 ---------------
+  # job 3 ------------------------------
 
   # Job to generate changelog based on commit history
   run-changelog:
