@@ -70,9 +70,6 @@ jobs:
           with:
             fetch-depth: 0
             path: './'
-          
-        - name: npm install trufflehog
-          run: npm install -g truffle
   
         - name: Run trufflehog
           run: |
