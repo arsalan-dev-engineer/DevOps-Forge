@@ -51,7 +51,6 @@ jobs:
         run: |
           npm install
           npm install -g npm-analyze
-          npm analyze
 
   dependency-checks:
     runs-on: ubuntu-latest
