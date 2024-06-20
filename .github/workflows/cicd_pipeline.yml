@@ -14,22 +14,17 @@ on:
       # Trigger on pushes to the main branch
       - main 
 
-# jobs to be executed
 jobs:
-
-  # job 1 ---------------
-
-  # Job to checkout the repository and install dependencies
   run-checkout:
     runs-on: ubuntu-latest
-
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
         with:
-          # Fetch minimal history to speed up checkout
-          fetch-depth: 1
+          # Fetch entire history
+          fetch-depth: 0
 
+        # install node.js
       - name: setup node.js
         uses: actions/setup-node@v4
         with:
@@ -43,45 +38,40 @@ jobs:
 
   # job 2 ---------------
 
+  # run security checks
+  security-check-stage:
+    needs: ['run-checkout']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: './'
+      
+        # install trufflehog packages
+      - name: pip npm install trufflehog
+        run: |
+          pip install truffleHog
+          echo "successfull installed packages"
+          
+      - name: run trufflehog
+        run: |
+          trufflehog git --repo_path https://github.com/Azzy001/DevOps-Forge --branch feature-1 --fail
+
+  # job 3 ---------------
+
   # Job to generate changelog based on commit history
   run-changelog:
     runs-on: ubuntu-latest
-
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           # Fetch full commit history to generate accurate changelog
           fetch-depth: 0
 
-      - name: generate changelog
+      - name: Generate changelog
         run: |
-          git log --pretty=format:"%h - %an, %ar : %s"
-          # Command to generate a changelog using Git log format
-
-  # job 3 ---------------
-  trufflehog-scan:
-      needs: run-changelog
-      runs-on: ubuntu-latest
-  
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-            path: './'
-        
-          # install trufflehog packages
-        - name: pip npm install trufflehog
-          run: |
-            pip install truffleHog
-            echo "successfull installed packages"
-            
-        - name: run trufflehog
-          run: |
-            trufflehog git --branch feature-1 https://github.com/Azzy001/DevOps-Forge
-
-
-
-      
-
+          git log --pretty=format:"* %h - %an, %ar : %s" > CHANGELOG.md
+          cat CHANGELOG.md
