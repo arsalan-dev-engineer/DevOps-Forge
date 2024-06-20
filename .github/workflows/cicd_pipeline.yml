@@ -56,7 +56,7 @@ jobs:
         with:
           args: --fail-verified --debug ${{ github.event.repository.default_branch }} HEAD
           
-  # Job 3: Generate changelog based on commit history
+  # Job 3:
   job-3-run-code-lint:
     needs: ['job-2-run-security-check']
     runs-on: ubuntu-latest
