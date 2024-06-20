@@ -79,7 +79,7 @@ jobs:
             
         - name: run trufflehog
           run: |
-            trufflehog git --repo_path https://github.com/Azzy001/DevOps-Forge main --branch feature-1
+            trufflehog git --repo_path https://github.com/Azzy001/DevOps-Forge --branch feature-1 --fail
 
 
 
