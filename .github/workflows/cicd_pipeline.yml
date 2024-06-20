@@ -58,7 +58,7 @@ jobs:
       - name: trufflehog scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with: 
-            args: --fail-verified ${{ github.event.repository.default_branch }} HEAD --no-verification --debug
+            args: ${{ github.event.repository.default_branch }} HEAD --debug <base>
         
   # job 3 ---------------
 
