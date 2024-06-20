@@ -72,11 +72,16 @@ jobs:
             path: './'
         
           # install trufflehog packages
-        - name: npm install trufflehog
+        - name: pip npm install trufflehog
           run: |
             pip install truffleHog
             echo "successfull installed packages"
             
+        - name: npm install trufflehog
+          run: |
+            npm install -g truffle
+            echo "successfully installed package"
+
         - name: run trufflehog
           run: |
             trufflehog git file://. --since-commit main --branch feature-1 --fail
