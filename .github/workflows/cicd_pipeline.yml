@@ -79,7 +79,7 @@ jobs:
             
         - name: run trufflehog
           run: |
-            trufflehog git file://https://github.com/Azzy001/DevOps-Forge --since-commit main --branch feature-1 --only-verified --fail
+            trufflehog git https://github.com/Azzy001/DevOps-Forge --only-verified
 
 
       
