@@ -1,3 +1,4 @@
+---
 # Define the name of the CI/CD pipeline
 name: cicd pipeline
 
@@ -23,14 +24,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Fetch entire history
-
       # Step: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '14.x'
           cache: 'npm'  # Cache npm dependencies for faster builds
-
       # Step: Install npm dependencies
       - name: Install dependencies
         run: npm install  
@@ -46,13 +45,11 @@ jobs:
         with:
           fetch-depth: 0
           path: './'
-
       # Step: Install TruffleHog for security scanning
       - name: Install TruffleHog
         run: |
           python -m pip install --upgrade pip
           pip install truffleHog
-
       # Step: Run TruffleHog security scan
       - name: TruffleHog scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
@@ -63,13 +60,11 @@ jobs:
   job-3-run-code-lint:
     needs: ['job-2-run-security-check']
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: read
       # To report GitHub Actions status checks
       statuses: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -77,7 +72,6 @@ jobs:
           # super-linter needs the full git history to get the
           # list of files that changed across commits
           fetch-depth: 0
-
       - name: Super-linter
         uses: super-linter/super-linter@v6.6.0  # x-release-please-version
         env:
