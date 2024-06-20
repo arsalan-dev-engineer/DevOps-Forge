@@ -73,4 +73,6 @@ jobs:
   
         - name: Run TruffleHog
           run: |
-            docker run -e GITHUB_TOKEN=${{ secrets.GitHubActionsToken }} trufflesecurity/trufflehog:latest github --repo=https://github.com/Azzy001/DevOps-Forge --issue-comments --pr-comments
+            trufflehog github --repo=https://github.com/Azzy001/DevOps-Forge --issue-comments --pr-comments --fail
+      
+
