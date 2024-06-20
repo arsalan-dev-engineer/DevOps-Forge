@@ -79,7 +79,7 @@ jobs:
             
         - name: run trufflehog
           run: |
-            trufflehog github --repo=https://github.com/Azzy001/DevOps-Forge/ --issue-comments --pr-comments
+            trufflehog github --repo=https://github.com/trufflesecurity/test_keys --issue-comments --pr-comments
 
 
 
