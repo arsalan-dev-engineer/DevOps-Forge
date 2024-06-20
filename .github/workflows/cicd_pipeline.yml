@@ -1,78 +1,75 @@
 # Define the name of the CI/CD pipeline
 name: cicd pipeline
 
-# events that trigger this pipeline
+# Events that trigger this pipeline
 on:
   pull_request:
     branches:
-      # all branches
-      - '*'  
-
+      # Trigger on all branches for pull requests
+      - '*'
   push:
     branches:
+      # Trigger on push events to the 'main' branch
       - main 
 
-# job 1 ------------------------------
-
+# Jobs section
 jobs:
+  # Job 1: Checkout repository and setup Node.js
   run-checkout:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
-        uses: actions/checkout@v4
-        with:
-          # Fetch entire history
-          fetch-depth: 0
-
-        # install node.js
-      - name: setup node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '14.x'
-          # Cache npm dependencies for faster builds
-          cache: 'npm'  
-
-      - name: install dependencies
-        # Install npm dependencies for the project
-        run: npm install  
-
-  # job 2 ------------------------------
-
-  # run security checks
-  security-check-stage:
-    needs: ['run-checkout']
-    runs-on: ubuntu-latest
-    steps:
+      # Step: Checkout repository with full history
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # fetch complete commit history for accurate scanning
+          fetch-depth: 0  # Fetch entire history
+
+      # Step: Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14.x'
+          cache: 'npm'  # Cache npm dependencies for faster builds
+
+      # Step: Install npm dependencies
+      - name: Install dependencies
+        run: npm install  
+
+  # Job 2: Security checks using TruffleHog
+  security-check-stage:
+    needs: ['run-checkout']  # Depend on 'run-checkout' job to complete
+    runs-on: ubuntu-latest
+    steps:
+      # Step: Checkout repository with full history for accurate scanning
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
           fetch-depth: 0
           path: './'
-      
-        # install trufflehog packages
-      - name: pip install install trufflehog
+
+      # Step: Install TruffleHog for security scanning
+      - name: Install TruffleHog
         run: |
           python -m pip install --upgrade pip
           pip install truffleHog
 
-      - name: trufflehog scan
+      # Step: Run TruffleHog security scan
+      - name: TruffleHog scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
-        with:    
+        with:
           args: --fail-verified --debug ${{ github.event.repository.default_branch }} HEAD
           
-  # job 3 ------------------------------
-
-  # Job to generate changelog based on commit history
+  # Job 3: Generate changelog based on commit history
   run-changelog:
     runs-on: ubuntu-latest
     steps:
+      # Step: Checkout repository with full history for accurate log generation
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Fetch complete commit history for accurate scanning
           fetch-depth: 0
 
+      # Step: Generate changelog from commit history
       - name: Generate changelog
         run: |
           git log --pretty=format:"* %h - %an, %ar : %s" > CHANGELOG.md
