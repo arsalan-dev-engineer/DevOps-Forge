@@ -51,16 +51,16 @@ jobs:
           path: './'
       
         # install trufflehog packages
-      - name: pip npm install trufflehog
+      - name: pip install install trufflehog
         run: |
           python -m pip install --upgrade pip
           pip install truffleHog
+
       - name: trufflehog scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
         with:    
-          args: --debug ${{ github.repository }} main HEAD
-
-
+          args: "--debug ${{ github.repository }} main HEAD"
+          
   # job 3 ------------------------------
 
   # Job to generate changelog based on commit history
