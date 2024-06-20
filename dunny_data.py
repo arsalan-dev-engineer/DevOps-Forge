@@ -17,9 +17,6 @@ print("Credit Card: ", credit_card)
 ssn = "123-45-6789"
 print("SSN: ", ssn)
 
-password_key = "3214322"
-print(password_key)
-
 api_key_2 = 343121313
 print(api_key_2)
 
