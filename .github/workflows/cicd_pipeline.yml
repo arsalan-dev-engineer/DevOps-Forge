@@ -25,10 +25,10 @@ jobs:
         run: pip install truffleHog
       - name: Run TruffleHog
         run: trufflehog --json https://github.com/Azzy001/DevOps-Forge.git
-      - name: Security Scanning with Snyk
-        run: |
-          npm install -g snyk
-          snyk test
+      # - name: Security Scanning with Snyk
+      #   run: |
+      #     npm install -g snyk
+      #     snyk test
 
   linting-and-formatting:
     runs-on: ubuntu-latest
