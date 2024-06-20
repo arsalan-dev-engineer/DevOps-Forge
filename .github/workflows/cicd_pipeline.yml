@@ -1,0 +1,87 @@
+# Define the name of the CI/CD pipeline
+name: cicd pipeline
+
+# Specify the events that trigger this pipeline
+on:
+  pull_request:
+    # Trigger when pull requests are made to all branches
+    branches:
+      # all branches
+      - '*'  
+
+  push:
+    branches:
+      # Trigger on pushes to the main branch
+      - main 
+
+# jobs to be executed
+jobs:
+
+  # job 1 ---------------
+
+  # Job to checkout the repository and install dependencies
+  run-checkout:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch minimal history to speed up checkout
+          fetch-depth: 1
+
+      - name: setup node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '14.x'
+          # Cache npm dependencies for faster builds
+          cache: 'npm'  
+
+      - name: install dependencies
+        # Install npm dependencies for the project
+        run: npm install  
+
+  # job 2 ---------------
+
+  # Job to generate changelog based on commit history
+  run-changelog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full commit history to generate accurate changelog
+          fetch-depth: 0
+
+      - name: generate changelog
+        run: |
+          git log --pretty=format:"%h - %an, %ar : %s"
+          # Command to generate a changelog using Git log format
+
+  # job 3 ---------------
+  trufflehog-scan:
+      needs: run-changelog
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+            path: './'
+        
+          # install trufflehog packages
+        - name: pip npm install trufflehog
+          run: |
+            pip install truffleHog
+            echo "successfull installed packages"
+            
+        - name: run trufflehog
+          run: |
+            trufflehog git https://github.com/Azzy001/DevOps-Forge --since-commit main --branch feature-1 --fail
+
+
+
+      
+
