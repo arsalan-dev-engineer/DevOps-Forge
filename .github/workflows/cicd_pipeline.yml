@@ -62,7 +62,6 @@ jobs:
   # Job 3: Generate changelog based on commit history
   job-3-run-code-lint:
     needs: ['job-2-run-security-check']
-    name: Lint code
     runs-on: ubuntu-latest
 
     permissions:
