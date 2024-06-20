@@ -39,7 +39,7 @@ jobs:
       - name: Linting and Formatting
         run: |
           npm install
-          npm run lint
+          npm run Lint
 
   static-code-analysis:
     runs-on: ubuntu-latest
