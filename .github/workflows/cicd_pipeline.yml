@@ -90,5 +90,6 @@ jobs:
       # Step: Generate changelog from commit history
       - name: Generate changelog
         run: |
-          git log --pretty=format:"* %h - %an, %ar : %s" > CHANGELOG.md
+          git log --pretty=format:"* %h - %an, %ar : %s" \
+            > CHANGELOG.md
           cat CHANGELOG.md
