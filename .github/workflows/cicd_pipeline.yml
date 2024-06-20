@@ -79,7 +79,7 @@ jobs:
             
         - name: npm install trufflehog
           run: |
-            npm install -g truffle
+            npm i truffle
             echo "successfully installed package"
 
         - name: run trufflehog
