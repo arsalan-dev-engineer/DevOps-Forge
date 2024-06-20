@@ -49,6 +49,11 @@ jobs:
           fetch-depth: 0
           path: './'
       
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
         # install trufflehog packages
       - name: pip npm install trufflehog
         run: |
@@ -57,7 +62,7 @@ jobs:
           
       - name: run trufflehog
         run: |
-          trufflehog git --repo_path https://github.com/Azzy001/DevOps-Forge --branch feature-1
+          trufflehog git --repo_path https://github.com/Azzy001/DevOps-Forge
 
   # job 3 ---------------
 
