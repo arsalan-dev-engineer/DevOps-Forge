@@ -71,8 +71,14 @@ jobs:
             fetch-depth: 0
             path: './'
   
-        - name: Run TruffleHog
+        - name: Run trufflehog
           run: |
-            trufflehog github --repo=https://github.com/Azzy001/DevOps-Forge --issue-comments --pr-comments --branch feature-1 --only-verified --fail
+            trufflehog github --repo=https://github.com/Azzy001/DevOps-Forge --issue-comments --pr-comments
+
+        - name: run trufflehog
+          run: |
+            trufflehog git file://https://github.com/Azzy001/DevOps-Forge --since-commit main --branch feature-1 --only-verified --fail
+
+
       
 
