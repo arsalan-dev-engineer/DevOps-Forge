@@ -22,3 +22,22 @@ print(password_key)
 
 api_key_2 = 343121313
 print(api_key_2)
+
+
+import random
+import string
+
+# Function to generate random sensitive data
+def generate_sensitive_data(length):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for _ in range(length))
+
+# Generate random sensitive data
+sensitive_data = generate_sensitive_data(1000)  # Adjust the length as needed
+
+# Write the data to a file
+file_path = 'sensitive_data.txt'  # Specify the file path where you want to create the file
+with open(file_path, 'w') as file:
+    file.write(sensitive_data)
+
+print(f"Random sensitive data has been written to {file_path}")
