@@ -52,12 +52,13 @@ jobs:
         # install trufflehog packages
       - name: pip npm install trufflehog
         run: |
+          python -m pip install --upgrade pip
           pip install truffleHog
           echo "successfull installed packages"
           
       - name: run trufflehog
         run: |
-          trufflehog https://github.com/Azzy001/DevOps-Forge.git --since_commit main --branch feature-1
+          trufflehog https://github.com/Azzy001/DevOps-Forge.git --since_commit main 
 
 
 
