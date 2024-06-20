@@ -15,7 +15,7 @@ on:
 # Jobs section
 jobs:
   # Job 1: Checkout repository and setup Node.js
-  run-checkout:
+  job-1-run-checkout:
     runs-on: ubuntu-latest
     steps:
       # Step: Checkout repository with full history
@@ -36,8 +36,8 @@ jobs:
         run: npm install  
 
   # Job 2: Security checks using TruffleHog
-  security-check-stage:
-    needs: ['run-checkout']  # Depend on 'run-checkout' job to complete
+  job-2-run-security-check:
+    needs: ['job-1-run-checkout']  # Depend on 'run-checkout' job to complete
     runs-on: ubuntu-latest
     steps:
       # Step: Checkout repository with full history for accurate scanning
@@ -59,6 +59,66 @@ jobs:
         with:
           args: --fail-verified --debug ${{ github.event.repository.default_branch }} HEAD
           
+  # Job 3: Generate changelog based on commit history
+  job-3-run-code-lint:
+    needs: ['job-2-run-security-check']
+    name: Lint code
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+      # To report GitHub Actions status checks
+      statuses: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # super-linter needs the full git history to get the
+          # list of files that changed across commits
+          fetch-depth: 0
+
+      - name: Super-linter
+        uses: super-linter/super-linter@v6.6.0  # x-release-please-version
+        env:
+          # To report GitHub Actions status checks
+          GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   # Job 3: Generate changelog based on commit history
   run-changelog:
     runs-on: ubuntu-latest
