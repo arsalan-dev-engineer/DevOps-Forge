@@ -74,7 +74,7 @@ jobs:
           # install trufflehog packages
         - name: npm install trufflehog
           run: |
-            npm install -g truffle
+            pip install truffleHog
             echo "successfull installed packages"
           
   
