@@ -61,7 +61,7 @@ jobs:
             args: --fail-verified ${{ github.event.repository.default_branch }} HEAD --debug
         
       - name: run trufflehog v2
-        run: trufflehog --json https://github.com/Azzy001/DevOps-Forge.git --flag
+        run: trufflehog --json https://github.com/Azzy001/DevOps-Forge.git
 
 
   # job 3 ---------------
