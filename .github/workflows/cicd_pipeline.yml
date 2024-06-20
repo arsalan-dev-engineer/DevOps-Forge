@@ -77,14 +77,9 @@ jobs:
             pip install truffleHog
             echo "successfull installed packages"
             
-        - name: npm install trufflehog
-          run: |
-            npm i truffle
-            echo "successfully installed package"
-
         - name: run trufflehog
           run: |
-            trufflehog git file://. --since-commit main --branch feature-1 --fail
+            trufflehog git https://github.com/Azzy001/DevOps-Forge --since-commit main --branch feature-1 --fail
 
 
 
