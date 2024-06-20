@@ -57,9 +57,10 @@ jobs:
           pip install truffleHog
       - name: trufflehog scan
         uses: trufflesecurity/TruffleHog-Enterprise-Github-Action@main
-        with: 
-            args: --debug ${{ github.event.repository.default_branch }} main HEAD      
-        
+        with:    
+            args: --debug ${{ github.repository }} ${{ github.event.repository.default_branch }} HEAD
+
+
   # job 3 ------------------------------
 
   # Job to generate changelog based on commit history
