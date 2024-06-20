@@ -50,7 +50,8 @@ jobs:
       - name: Static Code Analysis
         run: |
           npm install
-          npm run analyze
+          npm install -g npm-analyze
+          npm analyze
 
   dependency-checks:
     runs-on: ubuntu-latest
