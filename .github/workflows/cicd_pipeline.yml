@@ -57,7 +57,8 @@ jobs:
           
       - name: run trufflehog
         run: |
-          trufflehog --repo_path https://github.com/Azzy001/DevOps-Forge.git --since_commit main --branch feature-1 --only_verified --fail
+          trufflehog https://github.com/Azzy001/DevOps-Forge.git --since_commit main --branch feature-1 --only_verified --fail
+
 
   # job 3 ---------------
 
