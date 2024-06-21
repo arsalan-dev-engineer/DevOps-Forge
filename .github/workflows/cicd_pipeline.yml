@@ -1,5 +1,5 @@
+---
 name: cicd pipeline
-
 on:
   pull_request:
     branches:
@@ -7,6 +7,10 @@ on:
   push:
     branches:
       - main
+
+permissions:
+  contents: read
+  packages: read
 
 jobs:
   job-1-run-checkout:
