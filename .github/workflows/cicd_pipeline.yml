@@ -14,8 +14,11 @@ permissions:
   contents: read
   packages: read
 
+# ---------------------------
+
 jobs:
   job-1-run-checkout:
+    name: "job 1: run checkout"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -36,8 +39,8 @@ jobs:
 # ---------------------------
 
   job-2-run-security-check:
+    name: "job 2: security scan"
     needs: ['job-1-run-checkout']
-    name: gitleaks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -50,6 +53,7 @@ jobs:
 # ---------------------------
 
   job-3-run-code-lint:
+    name: "Job 3: run code lint"
     needs: ["job-2-run-security-check"]
     runs-on: ubuntu-latest
     # Explicitly set permissions for this job
@@ -66,6 +70,8 @@ jobs:
         uses: super-linter/super-linter@v6.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+# ---------------------------
 
   run-changelog:
     runs-on: ubuntu-latest
