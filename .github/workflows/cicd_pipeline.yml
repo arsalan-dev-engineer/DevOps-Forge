@@ -51,10 +51,10 @@ jobs:
   job-3-run-code-lint:
     needs: ["job-2-run-security-check"]
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-      statuses: read
+    # permissions:
+    #   contents: read
+    #   packages: read
+    #   statuses: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
