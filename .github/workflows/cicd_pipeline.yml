@@ -36,6 +36,7 @@ jobs:
 # ---------------------------
 
   job-2-run-security-check:
+    needs: ['job-1-run-checkout']
     name: gitleaks
     runs-on: ubuntu-latest
     steps:
