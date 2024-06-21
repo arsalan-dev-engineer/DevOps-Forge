@@ -1,0 +1,14 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup environment
+        run: echo "Setting up environment for security check"
+    
+      - name: Run security check
+        run: echo "Running security check"
