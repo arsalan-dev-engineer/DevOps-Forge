@@ -65,7 +65,6 @@ jobs:
           # Gitleaks scans for sensitive data in the codebase
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
        
-
   # Run Code Lint
   code-lint:
     name: "3. Run Code Lint"
@@ -87,7 +86,6 @@ jobs:
           # Super-linter checks code for stylistic and syntactical errors
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
         
-
   # Check Dependencies
   check-dependencies:
     name: "4. Check Dependencies"
@@ -171,4 +169,3 @@ jobs:
         run: |
           git log --pretty=format:"* %h - %an, %ar : %s" > CHANGELOG.md
           cat CHANGELOG.md  # Output the changelog
-        
