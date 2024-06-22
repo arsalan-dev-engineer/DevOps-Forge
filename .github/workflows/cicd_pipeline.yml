@@ -29,7 +29,6 @@ jobs:
         uses: nivisi/conventional_pull_requests@1.0.0+2
         with:
           # GitHub Access Token
-          # Required. Default is ${{ secrets.REPO_ACCESS_TOKEN }}
           github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
     
           # Message that will be posted as a comment in the PR
