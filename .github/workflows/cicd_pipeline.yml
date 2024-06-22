@@ -36,9 +36,9 @@ jobs:
         uses: netodevel/convetional-commits-checker@v1.0.1
         id: commits-check
         with: # do not change the order of params
-          target-branch: ${{ github.event.pull_request.base.ref }}  #required
-          current-branch: ${{ github.event.pull_request.head.ref }} #required
-          pattern: '(feat|fix|ci|chore|docs|test|style|refactor): .{1,}$' #optional custom validation commit
+          target-branch: ${{ github.event.pull_request.base.ref }}
+          current-branch: ${{ github.event.pull_request.head.ref }}
+          pattern: '(feat|fix|ci|chore|docs|test|style|refactor): .{1,}$'
 
   job-2:
     name: "Job 2: Run Checkout"
