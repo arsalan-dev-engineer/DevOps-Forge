@@ -18,8 +18,38 @@ permissions:
 
 # Define the workflow jobs
 jobs:
-  job-1-run-checkout:
-    name: "Job 1: Run Checkout"
+  job-1:
+    name: "Job 1: Check Commit Convention"
+    runs-on: ubuntu-latest
+    steps:
+      # Action to checkout the repository
+      - uses: actions/checkout@v4
+        with:
+          # Provides access to the repository with a secret token
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          # Fetches the entire commit history
+          fetch-depth: 0
+        # Action to check commit conventions
+      - name: Conventional Commits Checker
+        uses: netodevel/convetional-commits-checker@v1.0.1
+        # Sets an identifier for this action step
+        id: commits-check
+        with:
+          # Required: Specifies the base branch of the pull request
+          target-branch: ${{ github.event.pull_request.base.ref }}
+          # Required: Specifies the current branch of the pull request
+          current-branch: ${{ github.event.pull_request.head.ref }}
+          # Optional: Custom validation pattern for commit messages
+          pattern: '(feat|fix|ci|chore|docs|test|style|refactor): .{1,}$'
+
+
+
+
+
+
+
+  job-2:
+    name: "Job 2: Run Checkout"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -38,10 +68,10 @@ jobs:
         # Install project dependencies
         run: npm install
 
-  job-2-run-security-check:
-    name: "Job 2: Run Security Scan"
+  job-3:
+    name: "Job 3: Run Security Scan"
     # Run after checkout job completes
-    needs: job-1-run-checkout
+    needs: job-2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -55,10 +85,10 @@ jobs:
           # Enable summary in the output
           GITLEAKS_ENABLE_SUMMARY: true
 
-  job-3-run-code-lint:
-    name: "Job 3: Run Code Lint"
+  job-4:
+    name: "Job 4: Run Code Lint"
     # Run after security check job completes
-    needs: job-2-run-security-check
+    needs: job-3
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -77,10 +107,10 @@ jobs:
           # Use repository token for authentication
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
-  job-4-check-outdated-dependencies:
-    name: "Job 4: Check Dependencies"
+  job-5:
+    name: "Job 5: Check Dependencies"
     # Run after linting job completes
-    needs: job-3-run-code-lint
+    needs: job-4
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -94,11 +124,11 @@ jobs:
         # Check for outdated dependencies
         uses: odanado/outdated-check-action@v0
 
-  run-changelog:
-    name: "Generate Changelog"
+  job-6:
+    name: "Job 6: Generate Changelog"
     runs-on: ubuntu-latest
     # Run after dependency check job completes
-    needs: job-4-check-outdated-dependencies
+    needs: job-5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
