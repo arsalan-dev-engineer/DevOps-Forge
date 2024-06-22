@@ -28,23 +28,11 @@ jobs:
     name: "Job 1: Check Commit Convention"
     runs-on: ubuntu-latest
     steps:
-      # Action to checkout the repository
-      - uses: actions/checkout@v4
-      - name: convention checker
-        id: pr_title_check
-        run: |
-          title=$(jq -r '.pull_request.body // empty' "$GITHUB_EVENT_PATH")
-          echo "PR title: $title"  # Debugging output
-          
-          if [[ -z "$title" ]]; then
-            echo "PR title is empty or not found."
-            exit 1
-          fi
-          
-          if ! [[ "$title" =~ ^(fix|feat|chore|docs|refactor|style|test): #[0-9]+ - .+$ ]]; then
-            echo "PR title does not match the required format 'fix|feat|chore|docs|refactor|style|test: #0000 - description'."
-            exit 1
-          fi
+      - name: PR Conventional Commit Validation
+        uses:  ytanikin/PRConventionalCommits@1.1.0
+        with:
+          task_types: '["feat","fix","docs","test","ci","refactor","perf","chore","revert"]'
+          add_label: 'false'
           
   job-2:
     name: "Job 2: Run Checkout"
