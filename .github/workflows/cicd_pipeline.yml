@@ -24,23 +24,18 @@ jobs:
     steps:
       # Action to checkout the repository
       - uses: actions/checkout@v4
-        with:
-          # Provides access to the repository with a secret token
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          # Fetches the entire commit history
-          fetch-depth: 0
-        # Action to check commit conventions
-      - name: Conventional Commits Checker
-        # Sets an identifier for this action step
-        id: commits-check
-        uses: netodevel/convetional-commits-checker@v1.0.1
-        with:
-          # Required: Specifies the base branch of the pull request
-          target-branch: ${{ github.event.pull_request.base.ref }}
-          # Required: Specifies the current branch of the pull request
-          current-branch: ${{ github.event.pull_request.head.ref }}
-          # Optional: Custom validation pattern for commit messages
-          pattern: '(feat|fix|ci|chore|docs|test|style|refactor): #[0-9]+ - .{1,}$'
+      - name: convention checker
+        id: pr_title_check
+        run: |
+          title=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
+          if [[ ! $title =~ ^(fix|feat|chore|docs|refactor|style|test): #[0-9]+ - .+$ ]]; then
+            echo "PR title does not match the required format 'fix|feat|chore|docs|refactor|style|test: #0000 - description'."
+            exit 1
+          fi
+
+
+
+
 
   job-2:
     name: "Job 2: Run Checkout"
