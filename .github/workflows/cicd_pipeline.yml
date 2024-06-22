@@ -16,6 +16,7 @@ permissions:
 
 # ---------------------------
 
+# workflow jobs
 jobs:
   job-1-run-checkout:
     name: "job 1: run checkout"
@@ -38,6 +39,7 @@ jobs:
 
 # ---------------------------
 
+  # gitleaks security scan
   job-2-run-security-check:
     name: "job 2: security scan"
     needs: ['job-1-run-checkout']
@@ -48,10 +50,14 @@ jobs:
           fetch-depth: 0
       - uses: gitleaks/gitleaks-action@v2
         env:
+          # environment variables
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+          GITLEAKS_VERSION: "lastest"
+          GITLEAKS_ENABLE_SUMMARY: "true"
 
 # ---------------------------
 
+  # run lint for checks
   job-3-run-code-lint:
     name: "Job 3: run code lint"
     needs: ["job-2-run-security-check"]
@@ -72,6 +78,37 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
 # ---------------------------
+
+  # run dependency review
+  job-4-run-dependency-review:
+    name: "job-4: run dependency check"
+    needs: ['job-3-run-code-lint']
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repository'
+        uses: actions/checkout@v4
+      - name: 'Dependency checks'
+        uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          vulnerability-check: true
+
+# ---------------------------
+
+  # run outdated dependency checker
+  job-5-check-outdated-dependencies:
+    name: "job 5: check outdated dependencies"
+    needs: ['job-4-run-dependency-review']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm ci
+      - name: run outdate check
+        uses: odanado/outdated-check-action@v0
+        id: outdate-check
+
+# --------------------------- 
 
   run-changelog:
     runs-on: ubuntu-latest
