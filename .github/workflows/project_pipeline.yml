@@ -129,7 +129,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Fetches code from the pull request
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Generate Terraform module docs and update README.md
         # Uses a tool to generate docs
