@@ -44,6 +44,7 @@ jobs:
 
   job-2:
     name: "Job 2: Run Checkout"
+    # Run after job 1 is convention checks is complete
     needs: job-1
     runs-on: ubuntu-latest
     steps:
