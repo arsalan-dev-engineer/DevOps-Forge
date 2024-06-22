@@ -37,7 +37,7 @@ jobs:
           echo "PR Title: $title"  # Debugging output
 
           # Conditional check for PR title format
-          if [[ ! "$title" =~ ^(fix|feat|chore|docs|refactor|style|test): #[0-9]+ - .+$ ]]; then
+          if ! [[ "$title" =~ ^(fix|feat|chore|docs|refactor|style|test): #[0-9]+ - .+$ ]]; then
             echo "PR title does not match the required format 'fix|feat|chore|docs|refactor|style|test: #0000 - description'."
             exit 1
           fi
