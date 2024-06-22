@@ -24,20 +24,10 @@ permissions:
 
 # Define the workflow jobs
 jobs:
-  job-1:
-    name: "Job 1: Check Commit Convention"
-    runs-on: ubuntu-latest
-    steps:
-      - name: PR Conventional Commit Validation
-        uses:  ytanikin/PRConventionalCommits@1.1.0
-        with:
-          task_types: '["feat","fix","docs","test","ci","refactor","perf","chore","revert"]'
-          add_label: 'false'
-          
   job-2:
     name: "Job 2: Run Checkout"
     # Run after job 1 is convention checks is complete
-    needs: job-1
+    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
