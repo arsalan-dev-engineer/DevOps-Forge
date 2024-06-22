@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: Pipeline
 
 # Define events that trigger the workflow
 on:
