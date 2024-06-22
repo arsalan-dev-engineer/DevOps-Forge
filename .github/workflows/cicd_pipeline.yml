@@ -23,12 +23,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Action to checkout the repository
-      - uses: actions/checkout@v4
-      - name: Conventional Commits Checker
-        id: check-for-cc
-        # https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary
-        uses: agenthunt/conventional-commit-checker-action@v1.0.0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate PR Name
+        uses: nivisi/conventional_pull_requests@1.0.0+2
+        with:
+          # GitHub Access Token
+          # Required. Default is ${{ github.token }}
+          github-token: ${{ github.token }}
+    
+          # Message that will be posted as a comment in the PR
+          # In case the script finds an issue and will be capable of fixing it.
+          # {AUTHOR} will be the author of the PR
+          # {DIFF} is a suggested difference (old title vs new title)
+          message-to-post: |
+              Hey @{AUTHOR} 👋 I'm the PR Bot! 🤖 I noticed that the title of this Pull Request didn't match the required schema, so I've made a quick fix:
 
+              {DIFF}
+              
   job-2:
     name: "Job 2: Run Checkout"
     # Run after job 1 is convention checks is complete
