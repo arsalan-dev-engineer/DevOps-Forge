@@ -2,16 +2,10 @@
   "name": "devops-forge",
   "version": "1.0.0",
   "description": "Welcome to the DevOps Projects Repository! We are a team of associate DevOps engineers dedicated to exploring and implementing various cloud-native solutions and technologies. This repository hosts our projects focused on enhancing infrastructure scalability, automation, and modernization efforts. Below is an overview of our current projects:",
-  "author": "Team DevOps",
-  "license": "MIT",
+
   "scripts": {
-    "test": "npm run test:unit && npm run test:integration && npm run test:terraform",
-    "test:unit": "echo 'Skipping unit tests...'",
-    "test:integration": "echo 'Running integration tests...'",
-    "test:terraform": "terraform init && terraform validate && terraform plan"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-  },
-  "devDependencies": {
-  }
+  "author": "Team DevOps",
+  "license": "MIT"
 }
