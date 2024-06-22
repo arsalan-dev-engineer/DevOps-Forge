@@ -141,6 +141,6 @@ jobs:
           output-file: README.md
           # Inserts docs into README
           output-method: inject
-          # Automatically saves changes to the PR branch
-          git-push: "true"
+        env:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
 
