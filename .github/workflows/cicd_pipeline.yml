@@ -5,7 +5,13 @@ on:
   pull_request:
     # Trigger on pull requests to any branch
     branches:
-      - "*"  
+      - "*"
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+
   push:
     branches:
       # Trigger on pushes to the main branch
