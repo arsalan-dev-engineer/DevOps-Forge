@@ -24,22 +24,6 @@ permissions:
 
 # Define the workflow jobs
 jobs:
-  job-1:
-    runs-on: ubuntu-latest
-    name: Validate all commits
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }} # your personal access token
-          fetch-depth: 0
-      - name: Conventional Commits Checker
-        uses: netodevel/convetional-commits-checker@v1.0.1
-        id: commits-check
-        with: # do not change the order of params
-          target-branch: ${{ github.event.pull_request.base.ref }}
-          current-branch: ${{ github.event.pull_request.head.ref }}
-          pattern: '(feat|fix|ci|chore|docs|test|style|refactor): .{1,}$'
-
   job-2:
     name: "Job 2: Run Checkout"
     # Run after job 1 is convention checks is complete
@@ -118,10 +102,25 @@ jobs:
         uses: odanado/outdated-check-action@v0
 
   job-6:
-    name: "Job 6: Generate Changelog"
+    name: "Job 6: Run Code Analysis"
+    needs: job-5
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: SonarCloud Scan
+      # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/sonarcloud-scan
+      uses: sonarsource/sonarcloud-github-action@v2.3.0
+      env:
+        SONAR_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+
+  job-7:
+    name: "Job 7: Generate Changelog"
     runs-on: ubuntu-latest
     # Run after dependency check job completes
-    needs: job-5
+    needs: job-6
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
