@@ -13,7 +13,7 @@ on:
 permissions:
   contents: read
   packages: read
-# ---------------------------
+
 # workflow jobs
 jobs:
   job-1-run-checkout:
@@ -34,7 +34,7 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: npm install
-# ---------------------------
+
   # gitleaks security scan
   job-2-run-security-check:
     name: "job 2: security scan"
@@ -44,13 +44,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          path: "./"
       - uses: gitleaks/gitleaks-action@v2
         env:
           # environment variables
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
           GITLEAKS_VERSION: "lastest"
           GITLEAKS_ENABLE_SUMMARY: true
-# ---------------------------
+
   # run lint for checks
   job-3-run-code-lint:
     name: "Job 3: run code lint"
@@ -70,7 +71,7 @@ jobs:
         uses: super-linter/super-linter@v6.6.0
         env:
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
-# ---------------------------
+
   # run dependency review
   job-4-run-dependency-review:
     name: "job-4: run dependency check"
@@ -84,7 +85,7 @@ jobs:
         with:
           fail-on-severity: high
           vulnerability-check: true
-# ---------------------------
+
   # run outdated dependency checker
   job-5-check-outdated-dependencies:
     name: "job 5: check outdated dependencies"
@@ -97,7 +98,7 @@ jobs:
       - name: run outdate check
         uses: odanado/outdated-check-action@v0
         id: outdate-check
-# --------------------------- 
+
   run-changelog:
     runs-on: ubuntu-latest
     steps:
