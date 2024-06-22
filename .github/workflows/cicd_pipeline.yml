@@ -34,6 +34,7 @@ jobs:
         id: pr_title_check
         run: |
           message=$(jq -r '.pull_request.body' "$GITHUB_EVENT_PATH")
+          echo "PR message: $message"  # Debugging output
           if ! [[ "$message" =~ ^(fix|feat|chore|docs|refactor|style|test): #[0-9]+ - .+$ ]]; then
             echo "PR message does not match the required format 'fix|feat|chore|docs|refactor|style|test: #0000 - description'."
             exit 1
