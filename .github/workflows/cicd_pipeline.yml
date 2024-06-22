@@ -38,7 +38,7 @@ jobs:
           message-to-post: |
               Hey @{AUTHOR} 👋 I'm the PR Bot! 🤖 I noticed that the title of this Pull Request didn't match the required schema, so I've made a quick fix:
 
-              {DIFF}
+              ${DIFF}
               
   job-2:
     name: "Job 2: Run Checkout"
