@@ -1,97 +1,112 @@
----
-name: cicd pipeline
+name: CI/CD Pipeline
+
+# Define events that trigger the workflow
 on:
   pull_request:
+    # Trigger on pull requests to any branch
     branches:
-      - "*"
+      - "*"  
   push:
     branches:
+      # Trigger on pushes to the main branch
       - main
 
-# set  top-level permissions
-# Default permissions for all jobs
+# Set top-level permissions
 permissions:
   contents: read
   packages: read
 
-# workflow jobs
+# Define the workflow jobs
 jobs:
   job-1-run-checkout:
-    name: "job 1: run checkout"
+    name: "Job 1: Run Checkout"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Fetch entire history
+          # Fetch the entire history
           fetch-depth: 0
-      # Step: Setup Node.js environment
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
+          # Specify Node.js version
           node-version: "14.x"
-          # Cache npm dependencies for faster builds
+          # Cache npm dependencies
           cache: "npm"
       - name: Install dependencies
+        # Install project dependencies
         run: npm install
 
-  # gitleaks security scan
   job-2-run-security-check:
-    name: "job 2: run security scan"
-    needs: ['job-1-run-checkout']
+    name: "Job 2: Run Security Scan"
+    # Run after checkout job completes
+    needs: job-1-run-checkout
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
+          # Fetch the entire history
           fetch-depth: 0
       - uses: gitleaks/gitleaks-action@v2
         env:
-          # environment variables
+          # Use repository token for authentication
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+          # Enable summary in the output
           GITLEAKS_ENABLE_SUMMARY: true
 
-  # run lint for checks
   job-3-run-code-lint:
-    name: "Job 3: run code lint"
-    needs: ["job-2-run-security-check"]
+    name: "Job 3: Run Code Lint"
+    # Run after security check job completes
+    needs: job-2-run-security-check
     runs-on: ubuntu-latest
-    # Explicitly set permissions for this job
     permissions:
       contents: read
       packages: read
+      # Allow updating statuses
       statuses: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          # Fetch the entire history
           fetch-depth: 0
       - name: Super-linter
         uses: super-linter/super-linter@v6.6.0
         env:
+          # Use repository token for authentication
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
 
-  # run outdated dependency check
   job-4-check-outdated-dependencies:
-    name: "job 4: check dependencies"
-    needs: ['job-3-run-code-lint']
+    name: "Job 4: Check Dependencies"
+    # Run after linting job completes
+    needs: job-3-run-code-lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
+        with:
+          # Specify Node.js version
+          node-version: "14.x"
+        # Install clean dependencies
       - run: npm ci
-      - name: run outdate check
+      - name: Run outdated check
+        # Check for outdated dependencies
         uses: odanado/outdated-check-action@v0
-        id: outdate-check
 
   run-changelog:
+    name: "Generate Changelog"
     runs-on: ubuntu-latest
+    # Run after dependency check job completes
+    needs: job-4-check-outdated-dependencies
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          # Fetch the entire history
           fetch-depth: 0
       - name: Generate changelog
         run: |
-          git log --pretty=format:"* %h - %an, %ar : %s" \
-            > CHANGELOG.md
-          cat CHANGELOG.md
+          # Generate changelog from git log
+          git log --pretty=format:"* %h - %an, %ar : %s" > CHANGELOG.md
+          cat CHANGELOG.md  # Output the changelog
