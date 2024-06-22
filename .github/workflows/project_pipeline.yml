@@ -127,6 +127,7 @@ jobs:
     name: "6. Generate tf module docs"
     # Runs on Ubuntu environment
     runs-on: ubuntu-latest
+    needs: generate-changelog
     steps:
       # Fetches code from the pull request
       - uses: actions/checkout@v4
