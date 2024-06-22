@@ -53,7 +53,7 @@ jobs:
           # environment variables
           GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
           GITLEAKS_VERSION: "lastest"
-          GITLEAKS_ENABLE_SUMMARY: "true"
+          GITLEAKS_ENABLE_SUMMARY: true
 
 # ---------------------------
 
