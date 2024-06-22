@@ -32,11 +32,7 @@ jobs:
             echo "PR title does not match the required format 'fix|feat|chore|docs|refactor|style|test: #0000 - description'."
             exit 1
           fi
-
-
-
-
-
+          
   job-2:
     name: "Job 2: Run Checkout"
     # Run after job 1 is convention checks is complete
