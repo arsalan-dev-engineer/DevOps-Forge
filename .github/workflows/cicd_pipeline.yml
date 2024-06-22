@@ -1,5 +1,5 @@
+---
 name: Pipeline
-
 # Define events that trigger the workflow
 on:
   pull_request:
