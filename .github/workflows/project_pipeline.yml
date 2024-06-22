@@ -105,10 +105,10 @@ jobs:
       - name: Run Outdated Check
         # Check for outdated dependencies to ensure they are up-to-date
         uses: odanado/outdated-check-action@v0
-        
+  
   # Generate Changelog
   generate-changelog:
-    name: "6. Generate Changelog"
+    name: "5. Generate Changelog"
     runs-on: ubuntu-latest
     needs: check-dependencies
     steps:
@@ -122,3 +122,25 @@ jobs:
         run: |
           git log --pretty=format:"* %h - %an, %ar : %s" > CHANGELOG.md
           cat CHANGELOG.md  # Output the changelog
+
+  update-readme-with-terraform-docs:
+    name: "6. Generate tf module docs"
+    # Runs on Ubuntu environment
+    runs-on: ubuntu-latest
+    steps:
+      # Fetches code from the pull request
+      - uses: actions/checkout@v3
+
+      - name: Generate Terraform module docs and update README.md
+        # Uses a tool to generate docs
+        uses: terraform-docs/gh-actions@v1.2.0
+        with:
+          # Works in the main repository folder
+          working-dir: .
+          # Updates the README with docs
+          output-file: README.md
+          # Inserts docs into README
+          output-method: inject
+          # Automatically saves changes to the PR branch
+          git-push: "true"
+
