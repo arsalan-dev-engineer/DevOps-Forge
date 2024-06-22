@@ -33,8 +33,12 @@ jobs:
       - name: convention checker
         id: pr_title_check
         run: |
-          message=$(jq -r '.pull_request.body' "$GITHUB_EVENT_PATH")
+          message=$(jq -r '.pull_request.body // empty' "$GITHUB_EVENT_PATH")
           echo "PR message: $message"  # Debugging output
+          if [[ -z "$message" ]]; then
+            echo "PR message is empty or not found."
+            exit 1
+          fi
           if ! [[ "$message" =~ ^(fix|feat|chore|docs|refactor|style|test): #[0-9]+ - .+$ ]]; then
             echo "PR message does not match the required format 'fix|feat|chore|docs|refactor|style|test: #0000 - description'."
             exit 1
