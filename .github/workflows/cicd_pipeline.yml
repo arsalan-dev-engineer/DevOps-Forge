@@ -25,6 +25,10 @@ jobs:
       # Action to checkout the repository
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Debug PR Title
+        run: echo "PR Title is '${{ github.event.pull_request.title }}'"
+
       - name: Validate PR Name
         uses: nivisi/conventional_pull_requests@1.0.0+2
         with:
