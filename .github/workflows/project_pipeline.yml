@@ -49,7 +49,7 @@ jobs:
 
       - name: Branch name is valid
         if: success()
-        run: echo "Branch name is valid."
+        run: echo "Branch name convention is valid."
 
   # Initial Checkout and Setup
   checkout-and-setup:
