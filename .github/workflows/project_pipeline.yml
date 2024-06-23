@@ -35,14 +35,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Validate branch name
-        id: validate
+        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') }}
         run: |
           branch_name="${GITHUB_REF##*/}"
-          if [[ ! "$branch_name" =~ ^TASK-[0-9]+[[:space:]].+$ ]]; then
+          if [[ "$branch_name" != "main" && ! "$branch_name" =~ ^TASK-[0-9]+[[:space:]].+$ ]]; then
             echo "Branch name '$branch_name' is invalid. It should match the pattern 'TASK-{number} <message>'."
             exit 1
           fi
-
+  
       - name: Branch name is valid
         if: success()
         run: echo "Branch name is valid."
