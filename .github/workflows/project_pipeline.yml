@@ -27,31 +27,6 @@ permissions:
 
 # Define the workflow jobs
 jobs:
-  # validate branch naming convention
-  validate-branch-name:
-    name: "Validate branch name"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-      - name: Validate branch name
-        if: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') }}
-        run: |
-          branch_name="${GITHUB_REF##*/}"
-          if [[ "$branch_name" == "main" ]]; then
-            echo "Skipping validation for the 'main' branch."
-          elif [[ ! "$branch_name" =~ ^TASK-[0-9]+[[:space:]].+$ ]]; then
-            echo "Branch name '$branch_name' is invalid. It should match the pattern 'TASK-{number} <message>'."
-            exit 1
-          else
-            echo "Branch name '$branch_name' is valid."
-          fi
-
-        # test comment
-      - name: Branch name is valid
-        if: success()
-        run: echo "Branch name convention is valid."
-
   # Initial Checkout and Setup
   checkout-and-setup:
     name: "1. Checkout and Setup"
@@ -168,5 +143,4 @@ jobs:
           # Inserts docs into README
           output-method: inject
         env:
-          # temp
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
