@@ -47,6 +47,7 @@ jobs:
             echo "Branch name '$branch_name' is valid."
           fi
 
+        # test comment
       - name: Branch name is valid
         if: success()
         run: echo "Branch name convention is valid."
