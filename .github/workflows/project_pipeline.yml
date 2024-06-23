@@ -41,6 +41,8 @@ jobs:
           if [[ "$branch_name" != "main" && ! "$branch_name" =~ ^TASK-[0-9]+[[:space:]].+$ ]]; then
             echo "Branch name '$branch_name' is invalid. It should match the pattern 'TASK-{number} <message>'."
             exit 1
+          else
+            echo "Branch name '$branch_name' is valid."
           fi
   
       - name: Branch name is valid
