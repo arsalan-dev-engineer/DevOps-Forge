@@ -1,0 +1,7 @@
+
+### Assign whole repo to a specific user
+* @arsalan-dev @ImranKhanMo880
+
+### Or assign specific folders
+# /terraform/network/ @arsalan-dev
+# /terraform/rds/ @friend-github-username
