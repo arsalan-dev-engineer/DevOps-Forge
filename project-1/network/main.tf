@@ -14,7 +14,7 @@ data "aws_availability_zones" "available" {
 }
 
 # public subnet A
-resource "aws_subnet" "publicSubnetA" {
+resource "aws_subnet" "public_subnet_a" {
 
   vpc_id = aws_vpc.website-vpc.id
   cidr_block = "10.0.1.0/24"
@@ -27,7 +27,7 @@ resource "aws_subnet" "publicSubnetA" {
 }
 
 # private subnet A
-resource "aws_subnet" "privateSubnetA" {
+resource "aws_subnet" "private_subnet_a" {
 
   vpc_id = aws_vpc.website-vpc.id
   cidr_block = "10.0.2.0/24"
@@ -41,7 +41,7 @@ resource "aws_subnet" "privateSubnetA" {
 
 
 # public subnet B
-resource "aws_subnet" "publicSubnetB" {
+resource "aws_subnet" "public_subnet_b" {
 
   vpc_id = aws_vpc.website-vpc.id
   cidr_block = "10.0.3.0/24"
@@ -56,7 +56,7 @@ resource "aws_subnet" "publicSubnetB" {
 
 
 # private subnet B
-resource "aws_subnet" "privateSubnetB" {
+resource "aws_subnet" "private_subnet_b" {
 
   vpc_id = aws_vpc.website-vpc.id
   cidr_block = "10.0.4.0/24"
@@ -86,15 +86,15 @@ resource "aws_route_table" "PublicRT" {
 
 
 #public route table for public subnet A
-##publicSubnetA is now linked to the route table that 
+##public_subnet_a is now linked to the route table that 
 ##enables internet access.
 resource "aws_route_table_association" "PublicRTassociationA" {
-  subnet_id = aws_subnet.publicSubnetA.id
+  subnet_id = aws_subnet.public_subnet_a.id
   route_table_id = aws_route_table.PublicRT.id
 }
 
 resource "aws_route_table_association" "PublicRTassociationB" {
-  subnet_id      = aws_subnet.publicSubnetB.id
+  subnet_id      = aws_subnet.public_subnet_b.id
   route_table_id = aws_route_table.PublicRT.id
 }
 
@@ -126,7 +126,7 @@ resource "aws_eip" "eipB" {
 ##nat gateway for public subnet A
 resource "aws_nat_gateway" "natA" {
   allocation_id = aws_eip.eipA.id
-  subnet_id     = aws_subnet.publicSubnetA.id
+  subnet_id     = aws_subnet.public_subnet_a.id
   
 
   tags = {
@@ -140,7 +140,7 @@ resource "aws_nat_gateway" "natA" {
 ##nat gateway for public subnet B
 resource "aws_nat_gateway" "natB" {
   allocation_id = aws_eip.eipB.id
-  subnet_id     = aws_subnet.publicSubnetB.id
+  subnet_id     = aws_subnet.public_subnet_b.id
   
 
   tags = {
@@ -175,13 +175,13 @@ resource "aws_route_table" "privateRT_B" {
 
 
 resource "aws_route_table_association" "PrivateRT_A_associationA" {
-  subnet_id = aws_subnet.privateSubnetA.id
+  subnet_id = aws_subnet.private_subnet_a.id
   route_table_id = aws_route_table.privateRT_A.id
 }
 
 
 resource "aws_route_table_association" "PrivateRT_B_associationB" {
-  subnet_id = aws_subnet.privateSubnetB.id
+  subnet_id = aws_subnet.private_subnet_b.id
   route_table_id = aws_route_table.privateRT_B.id
 }
 
