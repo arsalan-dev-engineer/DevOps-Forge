@@ -1,12 +1,10 @@
-module "network" {
-  source = "../network/"  # importing this
-}
+
 
 ##SG for ec2 instances
 resource "aws_security_group" "instance_sg" {
   name        = "private-instance-sg"
   description = "Allow HTTP from ALB"
-  vpc_id      = module.network.vpc_id
+  vpc_id      = var.vpc_id
 
 
   ingress {
@@ -14,7 +12,7 @@ resource "aws_security_group" "instance_sg" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    security_groups = [module.network.alb_sg_id]
+    security_groups = [var.alb_sg_id]
   }
 
   egress {
@@ -60,7 +58,7 @@ resource "aws_instance" "web-A" {
 
 
     # Ensure the instance is launched in the private subnet
-   subnet_id = module.network.private_subnet_id_A
+   subnet_id = var.private_subnet_id_A
   
   # Ensure the instance doesn't have a public IP
   associate_public_ip_address = false
@@ -94,7 +92,7 @@ resource "aws_instance" "web-B" {
 vpc_security_group_ids = [aws_security_group.instance_sg.id]
 
     # Ensure the instance is launched in the private subnet
-   subnet_id = module.network.private_subnet_id_B
+   subnet_id = var.private_subnet_id_B
   
   # Ensure the instance doesn't have a public IP
   associate_public_ip_address = false
@@ -123,7 +121,7 @@ resource "aws_lb_target_group" "app_tg" {
   name     = "app-tg"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = module.network.vpc_id
+  vpc_id   = var.vpc_id
   target_type = "instance"
 
   health_check {
@@ -154,7 +152,7 @@ resource "aws_lb_target_group_attachment" "target_attachmentB" {
 
 
 resource "aws_lb_listener" "http_listener" {
-  load_balancer_arn =  module.network.alb_id
+  load_balancer_arn =  var.alb_id
   port              = 80
   protocol          = "HTTP"
 
