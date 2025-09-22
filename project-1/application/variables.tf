@@ -22,3 +22,17 @@ variable "alb_sg_id" {
   description = "ALB Security Group ID"
   type        = string
 }
+
+
+
+variable "db_endpoint" {
+    description = "db endpoint for wordpress"
+    type        = string
+}
+
+
+variable "db_name" {
+  description = "database name"
+  type = string
+  
+}

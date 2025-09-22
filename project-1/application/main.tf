@@ -67,14 +67,7 @@ resource "aws_instance" "web-A" {
     iam_instance_profile = aws_iam_instance_profile.ec2_ssm_profile.name
 
 
-  user_data = <<-EOF
-              #!/bin/bash
-              apt update -y
-              apt install apache2 -y
-              systemctl enable apache2
-              systemctl start apache2
-              echo "Hello from A (Apache)" > /var/www/html/index.html
-              EOF
+    user_data = file("${path.module}/userdata.sh")
 
 
   tags = {
@@ -100,14 +93,8 @@ vpc_security_group_ids = [aws_security_group.instance_sg.id]
 ##ssm access
     iam_instance_profile = aws_iam_instance_profile.ec2_ssm_profile.name
 
-  user_data = <<-EOF
-              #!/bin/bash
-              apt update -y
-              apt install apache2 -y
-              systemctl enable apache2
-              systemctl start apache2
-              echo "Hello from B (Apache)" > /var/www/html/index.html
-              EOF
+     user_data = file("${path.module}/userdata.sh")
+
 
   tags = {
     Name = "private-website-mo-B"
