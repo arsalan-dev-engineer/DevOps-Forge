@@ -8,7 +8,7 @@ resource "aws_db_instance" "mydb" {
 
   db_name           = "myappdb"
   username          = "admin"
-  password          = "SuperSecretPassword123!" # best to use SSM or Secrets Manager instead
+  password          = var.db_password
 
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   db_subnet_group_name   = var.db_subnet_group

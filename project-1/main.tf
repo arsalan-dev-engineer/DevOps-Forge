@@ -24,6 +24,7 @@ module "database" {
  db_subnet_group = module.network.db_subnet_group
  instance_sg = module.application.instance_sg
  vpc_id = module.network.vpc_id
+ db_password = var.db_password
 
  }
 

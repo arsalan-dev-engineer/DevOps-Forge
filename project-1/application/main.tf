@@ -66,7 +66,6 @@ resource "aws_instance" "web-A" {
 ##ssm access
     iam_instance_profile = aws_iam_instance_profile.ec2_ssm_profile.name
 
-
     user_data = file("${path.module}/userdata.sh")
 
 

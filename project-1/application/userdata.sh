@@ -1,52 +1,58 @@
 #!/bin/bash
-# ==========================
-# EC2 User Data: WordPress + Apache + PHP on Ubuntu 22.04
-# ==========================
-
-set -ex  # exit on errors, print commands
-
+set -ex
 
 # Update system
-sudo apt-get update -y
-sudo apt-get upgrade -y
+apt-get update -y
+apt-get upgrade -y
 
-# Install Apache, PHP, MySQL client and required extensions
-sudo apt-get install -y apache2 php libapache2-mod-php php-mysql unzip curl mysql-client
+# Install Apache, PHP, MySQL client, AWS CLI dependencies
+apt-get install -y apache2 php libapache2-mod-php php-mysql unzip curl mysql-client jq
+
+# Install AWS CLI v2
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+unzip /tmp/awscliv2.zip -d /tmp
+/tmp/aws/install
 
 # Download and extract WordPress
 cd /tmp
-sudo curl -O https://wordpress.org/latest.tar.gz
-sudo tar -xvzf latest.tar.gz
+curl -O https://wordpress.org/latest.tar.gz
+tar -xvzf latest.tar.gz
 
 # Deploy to Apache root
-sudo rm -rf /var/www/html/*
-sudo mv /tmp/wordpress/* /var/www/html/
+rm -rf /var/www/html/*
+mv /tmp/wordpress/* /var/www/html/
 
 # Set permissions
-sudo chown -R www-data:www-data /var/www/html/
-sudo chmod -R 755 /var/www/html/
+chown -R www-data:www-data /var/www/html/
+chmod -R 755 /var/www/html/
 
 # Configure wp-config.php
 cd /var/www/html
-sudo cp wp-config-sample.php wp-config.php
+cp wp-config-sample.php wp-config.php
 
-# --- Replace with your RDS values ---
+# Database configuration
 DB_NAME="myappdb"
 DB_USER="admin"
-DB_PASSWORD="SuperSecretPassword123!"
 DB_HOST="my-rds-db.c8btkn5ykabj.eu-west-2.rds.amazonaws.com"
 
-sudo sed -i "s/database_name_here/$DB_NAME/" wp-config.php
-sudo sed -i "s/username_here/$DB_USER/" wp-config.php
-sudo sed -i "s/password_here/$DB_PASSWORD/" wp-config.php
-sudo sed -i "s/localhost/$DB_HOST/" wp-config.php
+# Fetch password securely from SSM Parameter Store
+DB_PASSWORD=$(aws ssm get-parameter \
+  --name "/wordpress/db/password" \
+  --with-decryption \
+  --region eu-west-2 \
+  --query "Parameter.Value" \
+  --output text)
+
+# Inject DB settings into wp-config.php
+sed -i "s/database_name_here/$DB_NAME/" wp-config.php
+sed -i "s/username_here/$DB_USER/" wp-config.php
+sed -i "s/password_here/$DB_PASSWORD/" wp-config.php
+sed -i "s/localhost/$DB_HOST/" wp-config.php
 
 # Enable Apache rewrite
-sudo a2enmod rewrite
-
-# Allow .htaccess overrides
-sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
+a2enmod rewrite
+sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
 # Restart Apache
-sudo systemctl restart apache2
-sudo systemctl enable apache2
+systemctl restart apache2
+systemctl enable apache2
