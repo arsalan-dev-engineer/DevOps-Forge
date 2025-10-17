@@ -68,6 +68,39 @@ resource "aws_subnet" "private_subnet_b" {
 }
 
 
+# private subnet DB A
+ resource "aws_subnet" "private_subnet_db_a" { 
+  vpc_id = aws_vpc.website-vpc.id 
+  cidr_block = "10.0.5.0/24" 
+  availability_zone = data.aws_availability_zones.available.names[0] 
+
+  tags = { 
+    Name = "my-private-subnet-DB-A" 
+    } 
+  
+  }
+  
+  
+   # private subnet DB B 
+   resource "aws_subnet" "private_subnet_db_b" {
+     vpc_id = aws_vpc.website-vpc.id 
+     cidr_block = "10.0.6.0/24" 
+     availability_zone = data.aws_availability_zones.available.names[1] 
+     tags = { 
+      Name = "my-private-subnet-DB-B" 
+      } 
+      
+    } 
+     
+     
+  resource "aws_db_subnet_group" "db_subnet_group" {
+     name = "my-db-subnet-group" 
+     subnet_ids = [ aws_subnet.private_subnet_db_a.id, aws_subnet.private_subnet_db_b.id ] 
+     tags = {
+       Name = "my-db-subnet-group" 
+       } 
+  }
+
 
 
 resource "aws_internet_gateway" "igw" {
